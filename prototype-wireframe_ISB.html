@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WhatsApp Insurance Bot Prototype</title>
+    <style>
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            background-color: #e5ddd5;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            width: 100%;
+            max-width: 400px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        .header {
+            background-color: #075e54;
+            color: white;
+            padding: 15px;
+            text-align: center;
+        }
+        .chat-window {
+            flex: 1;
+            padding: 10px;
+            background-color: #e5ddd5;
+            overflow-y: auto;
+        }
+        .message {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 7px;
+            max-width: 75%;
+        }
+        .message.bot {
+            background-color: #dcf8c6;
+            align-self: flex-start;
+        }
+        .message.user {
+            background-color: #34b7f1;
+            color: white;
+            align-self: flex-end;
+        }
+        .options {
+            margin-top: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .options button {
+            padding: 10px;
+            background-color: #075e54;
+            color: white;
+            border: none;
+            border-radius: 7px;
+            cursor: pointer;
+        }
+        .options button:hover {
+            background-color: #128c7e;
+        }
+        .input-section {
+            background-color: #f0f0f0;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+        }
+        .input-section input[type="text"] {
+            flex: 1;
+            padding: 10px;
+            border-radius: 20px;
+            border: 1px solid #ddd;
+            margin-right: 10px;
+        }
+        .input-section button {
+            padding: 10px 15px;
+            background-color: #075e54;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h2>WhatsApp Insurance Bot</h2>
+        </div>
+
+        <div id="chat-window" class="chat-window">
+            <div class="message bot">
+                <p>Hello! How can I assist you today?</p>
+            </div>
+            <div class="options">
+                <button onclick="showPlanOptions()">Explore Insurance Plans</button>
+                <button onclick="showGetQuote()">Get a Quote</button>
+                <button onclick="showAgentSupport()">Talk to an Agent</button>
+                <button onclick="showFaq()">FAQs</button>
+            </div>
+        </div>
+
+        <div class="input-section hidden">
+            <input type="text" id="user-input" placeholder="Type a message">
+            <button onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+
+    <script>
+        function appendMessage(content, sender) {
+            const chatWindow = document.getElementById('chat-window');
+            const message = document.createElement('div');
+            message.className = `message ${sender}`;
+            message.innerHTML = `<p>${content}</p>`;
+            chatWindow.appendChild(message);
+            chatWindow.scrollTop = chatWindow.scrollHeight;
+        }
+
+        function showPlanOptions() {
+            appendMessage("Here are our insurance plans:", "bot");
+            appendMessage("<strong>Plan A:</strong> Term Insurance<br><strong>Plan B:</strong> Health Insurance<br><strong>Plan C:</strong> Life Insurance", "bot");
+            appendMessage('<button onclick="showGetQuote()">Get a Quote for Plan A</button><button onclick="reset()">Back to Main Menu</button>', "bot");
+        }
+
+        function showGetQuote() {
+            appendMessage("Please provide your details for a quote:", "bot");
+            appendMessage('Age: <input type="text" id="age" placeholder="Enter your age"><br>Gender: <select id="gender"><option value="">Select Gender</option><option value="male">Male</option><option value="female">Female</option><option value="other">Other</option></select><br>Smoker: <select id="smoker"><option value="">Select Option</option><option value="yes">Yes</option><option value="no">No</option></select>', "bot");
+            appendMessage('<button onclick="calculateQuote()">Get Quote</button><button onclick="reset()">Back to Main Menu</button>', "bot");
+        }
+
+        function calculateQuote() {
+            const age = document.getElementById('age').value;
+            const gender = document.getElementById('gender').value;
+            const smoker = document.getElementById('smoker').value;
+
+            if (age && gender && smoker) {
+                appendMessage(`Your estimated premium is: ₹10,000`, "bot");
+                appendMessage('<button onclick="showPurchase()">Proceed to Purchase</button>', "bot");
+            } else {
+                appendMessage("Please fill in all fields to get a quote.", "bot");
+            }
+        }
+
+        function showPurchase() {
+            appendMessage("Please provide your payment details to complete the purchase:", "bot");
+            appendMessage('Card Number: <input type="text" id="card-number" placeholder="Enter card number"><br>Expiry Date: <input type="text" id="expiry-date" placeholder="MM/YY"><br>CVV: <input type="text" id="cvv" placeholder="Enter CVV">', "bot");
+            appendMessage('<button onclick="completePurchase()">Complete Purchase</button>', "bot");
+        }
+
+        function completePurchase() {
+            appendMessage("Thank you for your purchase! Your policy has been issued and sent to your email.", "bot");
+            appendMessage("We value your feedback. Please rate your experience:", "bot");
+            appendMessage('<button onclick="submitFeedback(\'excellent\')">Excellent</button><button onclick="submitFeedback(\'good\')">Good</button><button onclick="submitFeedback(\'average\')">Average</button><button onclick="submitFeedback(\'poor\')">Poor</button>', "bot");
+        }
+
+        function submitFeedback(rating) {
+            appendMessage(`Thank you for your feedback: ${rating}`, "bot");
+        }
+
+        function showAgentSupport() {
+            appendMessage("An agent will be with you shortly. Please wait...", "bot");
+        }
+
+        function showFaq() {
+            appendMessage("Here are some frequently asked questions:", "bot");
+            appendMessage("<strong>Q:</strong> What is Term Insurance?<br><strong>A:</strong> Term insurance provides coverage for a specific period...", "bot");
+        }
+
+        function reset() {
+            document.getElementById('chat-window').innerHTML = `
+                <div class="message bot">
+                    <p>Hello! How can I assist you today?</p>
+                </div>
+                <div class="options">
+                    <button onclick="showPlanOptions()">Explore Insurance Plans</button>
+                    <button onclick="showGetQuote()">Get a Quote</button>
+                    <button onclick="showAgentSupport()">Talk to an Agent</button>
+                    <button onclick="showFaq()">FAQs</button>
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>
