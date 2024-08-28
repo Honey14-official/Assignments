@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dress Hyde Park Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 80%;
+            margin: auto;
+            overflow: hidden;
+            padding: 20px;
+            background: #ffffff;
+            margin-top: 30px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .chart-container {
+            margin-bottom: 40px;
+        }
+
+        h3 {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        canvas {
+            width: 100% !important;
+            max-width: 600px;
+            margin: auto;
+            display: block;
+        }
+    </style>
+    <!-- Include Chart.js library -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Dress Hyde Park Dashboard</h1>
+
+        <!-- Pie Chart for Gender Distribution -->
+        <div class="chart-container">
+            <h3>Customer Gender Distribution</h3>
+            <canvas id="genderChart"></canvas>
+        </div>
+
+        <!-- Bar Chart for Product Preferences -->
+        <div class="chart-container">
+            <h3>Product Preferences</h3>
+            <canvas id="productChart"></canvas>
+        </div>
+
+        <!-- Line Chart for Average Purchase Value by Age Group -->
+        <div class="chart-container">
+            <h3>Average Purchase Value by Age Group</h3>
+            <canvas id="purchaseChart"></canvas>
+        </div>
+
+        <!-- Line Chart for Repeat Purchase Rate -->
+        <div class="chart-container">
+            <h3>Repeat Purchase Rate Over Time</h3>
+            <canvas id="repeatPurchaseChart"></canvas>
+        </div>
+
+        <!-- Bar Chart for Stock Turnover Rate -->
+        <div class="chart-container">
+            <h3>Stock Turnover Rate by Product Type</h3>
+            <canvas id="stockTurnoverChart"></canvas>
+        </div>
+    </div>
+
+    <script>
+        // Data for the charts
+        const customerData = {
+            gender: ['Male', 'Female'],
+            genderCount: [7, 8], // 7 males and 8 females based on the 15 entries
+
+            products: ['T-shirt', 'Jeans', 'Dress', 'Jacket', 'Shirt', 'Skirt', 'Blouse'],
+            productCounts: [4, 2, 2, 2, 2, 2, 1], // Based on the provided entries
+
+            ageGroups: ['20-29', '30-39', '40-49'],
+            averagePurchaseValues: [1350, 1800, 3100], // Average values calculated from the 15 entries
+
+            repeatPurchaseRate: [10, 20, 30, 25, 15], // Hypothetical repeat purchase rates over 5 time periods
+            timePeriods: ['Week 1', 'Week 2', 'Week 3', 'Week 4', 'Week 5'], // Time periods for repeat purchase rate
+
+            stockTurnover: [3.5, 2.1, 4.2, 1.8, 3.1, 2.8, 1.2] // Hypothetical stock turnover rates for each product
+        };
+
+        // Pie Chart for Gender Distribution
+        const ctxGender = document.getElementById('genderChart').getContext('2d');
+        new Chart(ctxGender, {
+            type: 'pie',
+            data: {
+                labels: customerData.gender,
+                datasets: [{
+                    data: customerData.genderCount,
+                    backgroundColor: ['#36a2eb', '#ff6384']
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    }
+                }
+            }
+        });
+
+        // Bar Chart for Product Preferences
+        const ctxProduct = document.getElementById('productChart').getContext('2d');
+        new Chart(ctxProduct, {
+            type: 'bar',
+            data: {
+                labels: customerData.products,
+                datasets: [{
+                    label: 'Number of Products Purchased',
+                    data: customerData.productCounts,
+                    backgroundColor: '#4bc0c0'
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Line Chart for Average Purchase Value by Age Group
+        const ctxPurchase = document.getElementById('purchaseChart').getContext('2d');
+        new Chart(ctxPurchase, {
+            type: 'line',
+            data: {
+                labels: customerData.ageGroups,
+                datasets: [{
+                    label: 'Average Purchase Value (INR)',
+                    data: customerData.averagePurchaseValues,
+                    backgroundColor: '#ffcd56',
+                    borderColor: '#ffcd56',
+                    fill: false,
+                    tension: 0.1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Line Chart for Repeat Purchase Rate
+        const ctxRepeatPurchase = document.getElementById('repeatPurchaseChart').getContext('2d');
+        new Chart(ctxRepeatPurchase, {
+            type: 'line',
+            data: {
+                labels: customerData.timePeriods,
+                datasets: [{
+                    label: 'Repeat Purchase Rate (%)',
+                    data: customerData.repeatPurchaseRate,
+                    backgroundColor: '#ff9f40',
+                    borderColor: '#ff9f40',
+                    fill: false,
+                    tension: 0.1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Bar Chart for Stock Turnover Rate
+        const ctxStockTurnover = document.getElementById('stockTurnoverChart').getContext('2d');
+        new Chart(ctxStockTurnover, {
+            type: 'bar',
+            data: {
+                labels: customerData.products,
+                datasets: [{
+                    label: 'Stock Turnover Rate',
+                    data: customerData.stockTurnover,
+                    backgroundColor: '#9966ff'
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
